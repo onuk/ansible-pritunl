@@ -1,0 +1,62 @@
+---
+# tasks file for ansible-pritunl
+
+- name: Import public key for MongoDB
+  apt_key:
+    url: 'https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc'
+    state: present
+  become: true
+
+- name: Add mongodb apt repository
+  apt_repository:
+    repo: deb https://repo.mongodb.org/apt/ubuntu {{ distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse
+    filename: "mongodb-org-{{ mongodb_version }}"
+    state: present
+
+- name: Import public key for Pritunl
+  apt_key:
+    url: 'https://raw.githubusercontent.com/pritunl/pgp/master/pritunl_repo_pub.asc'
+    state: present
+  become: true
+
+- name: Add pritunl apt repository
+  apt_repository:
+    repo: deb http://repo.pritunl.com/stable/apt {{ ansible_distribution_release }} main
+    filename: "pritunl"
+    state: present
+
+- name: Add security apt repository
+  apt_repository:
+    repo: deb http://security.ubuntu.com/ubuntu focal-security main
+    filename: "focal-security"
+    state: present  
+
+- name: Update system OS
+  apt: update_cache=yes
+
+- name: Install libssl1.1
+  apt: 
+    name: libssl1.1
+    state: present
+
+- name: Install MongoDB
+  apt:
+    name: mongodb-org
+    state: present
+
+- name: Install Pritunl
+  apt:
+    name: pritunl
+    state: present
+
+- name: Enable mongod
+  systemd:
+    name: mongod
+    state: started
+    enabled: yes
+
+- name: Enable pritunl
+  systemd:
+    name: pritunl
+    state: started
+    enabled: yes

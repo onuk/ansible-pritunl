@@ -1,0 +1,4 @@
+---
+# defaults file for ansible-pritunl
+mongodb_version: 5.0
+distribution_release: "focal"
