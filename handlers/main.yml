@@ -1,0 +1,8 @@
+---
+# handlers file for ansible-pritunl
+
+# Restart pritunl server
+- name: start pritunl
+  service:
+    name: pritunl
+    state: started
